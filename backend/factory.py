@@ -2,9 +2,10 @@ from dotenv import load_dotenv
 from flask import Flask
 
 
-from routers.customer import customer_routes
-from routers.auth import auth_routes
 from extensions import db, jwt, migrate
+from routers.auth import auth_routes
+from routers.customer import customer_routes
+from routers.interaction import interaction_routes
 
 
 def createApp():
@@ -17,9 +18,8 @@ def createApp():
   migrate.init_app(app, db)
   jwt.init_app(app)
 
-  print()
-
-  app.register_blueprint(customer_routes)
   app.register_blueprint(auth_routes)
+  app.register_blueprint(customer_routes)
+  app.register_blueprint(interaction_routes)
 
   return app
