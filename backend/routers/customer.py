@@ -2,7 +2,7 @@ from flask import Blueprint, Response, jsonify, request
 from marshmallow import Schema, ValidationError, fields
 
 
-from database import db
+from extensions import db
 from models.customer import Customer
 
 
@@ -19,14 +19,13 @@ def create_customer():
     schema = CreateCustomerSchema()
     
     try:
-        result = schema.load(request_data)
+        data = schema.load(request_data)
     except ValidationError as err:
         return jsonify(err.messages), 400
 
-    customer = Customer(name=result["name"])
+    customer = Customer(name=data["name"])
 
-    db_session = db.session
-    db_session.add(customer)
-    db_session.commit()
+    db.session.add(customer)
+    db.session.commit()
 
     return Response(status=201)

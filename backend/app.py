@@ -1,18 +1,8 @@
-from flask import Flask
-from flask_migrate import Migrate
-
-from database import db
-from routers.customer import customer_routes
+from factory import createApp
 
 
-app = Flask(__name__)
-app.register_blueprint(customer_routes)
-
-app.config.from_pyfile("config.py")
-db.init_app(app)
-migrate = Migrate(app, db)
+app = createApp()
 
 
-@app.get("/")
-def home():
-  return "Hello world"
+if __name__ == "__main__":
+    app.run()
