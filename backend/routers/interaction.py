@@ -20,7 +20,7 @@ class EditInteractionSchema(Schema):
     description = fields.String(required=True)
 
 
-@interaction_routes.post("/v1/interactions")
+@interaction_routes.post("/api/v1/interactions")
 def create_interaction():
     request_data = request.json
     schema = CreateInteractionSchema()
@@ -37,7 +37,7 @@ def create_interaction():
 
     return Response(status=201)
 
-@interaction_routes.get("/v1/interactions")
+@interaction_routes.get("/api/v1/interactions")
 def get_interactions():
     interactions = Interaction.query.filter(Interaction.deleted_at.is_(None)).all()
     
@@ -47,7 +47,7 @@ def get_interactions():
 
     return jsonify({"data": result})
 
-@interaction_routes.put("/v1/interactions/<uuid>")
+@interaction_routes.put("/api/v1/interactions/<uuid>")
 def update_interaction(uuid: str):
     request_data = request.json
     schema = EditInteractionSchema()
@@ -66,7 +66,7 @@ def update_interaction(uuid: str):
     
     return Response(status=200)
 
-@interaction_routes.delete("/v1/interactions/<uuid>")
+@interaction_routes.delete("/api/v1/interactions/<uuid>")
 def delete_interaction(uuid: str):
     interaction = Interaction.query.filter_by(uuid=uuid).first()
     if not interaction:

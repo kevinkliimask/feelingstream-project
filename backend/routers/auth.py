@@ -14,7 +14,7 @@ class AuthSchema(Schema):
     password = fields.String(required=True)
 
 
-@auth_routes.post("/v1/auth")
+@auth_routes.post("/api/v1/auth")
 def auth():
     request_data = request.json
     schema = AuthSchema()

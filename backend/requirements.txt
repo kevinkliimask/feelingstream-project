@@ -4,6 +4,7 @@ flask-cors
 Flask-JWT-Extended
 Flask-Migrate
 Flask-SQLAlchemy
+gunicorn
 marshmallow
 psycopg2-binary
 python-dotenv

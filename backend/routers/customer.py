@@ -30,7 +30,7 @@ def create_customer():
 
     return Response(status=201)
 
-@customer_routes.get("/v1/customers")
+@customer_routes.get("/api/v1/customers")
 def get_customers():
     customers = Customer.query \
         .filter(Customer.deleted_at.is_(None)).all()
@@ -43,7 +43,7 @@ def get_customers():
 
     return jsonify({"data": result})
 
-@customer_routes.get("/v1/customers/<uuid>")
+@customer_routes.get("/api/v1/customers/<uuid>")
 def get_customer(uuid: str):
     customer = Customer.query.filter_by(uuid=uuid).first()
     if not customer:
