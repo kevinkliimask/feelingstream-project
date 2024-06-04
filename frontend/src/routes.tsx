@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 
-import Customers from "./views/customers";
-import Interactions from "./views/interactions";
+import Customers from "@/views/customers";
+import Interactions from "@/views/interactions";
 
 const AppRoutes = () => {
   return (

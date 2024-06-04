@@ -1,8 +1,8 @@
-import { Interaction } from "@/interfaces/interaction";
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useQuery } from "react-query";
 import axios from "axios";
 
+import { Interaction } from "@/interfaces/interaction";
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import CreateInteraction from "@/components/add-interaction";
 
 const getInteractions = async () => {

@@ -1,3 +1,9 @@
+import { useForm } from "react-hook-form";
+import { useQuery } from "react-query";
+import { useState } from "react";
+import { z } from "zod";
+import axios from "axios";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -8,17 +14,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { getCustomers } from "@/lib/getCustomers";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useQuery } from "react-query";
-import Combobox from "@/components/combobox";
-import { z } from "zod";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
-import axios from "axios";
+import Combobox from "@/components/combobox";
 
 const FormSchema = z.object({
   customer_uuid_name: z.string().min(1, { message: "Please select a customer" }),
@@ -56,7 +57,7 @@ const AddInteraction = ({ onSuccess }: AddInteractionProps ) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button onClick={() => setOpen(true)} className="font-bold">
+        <Button className="font-bold">
           Add Interaction
         </Button>
       </DialogTrigger>

@@ -1,7 +1,8 @@
-import CreateCustomer from "@/components/create-customer";
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { getCustomers } from "@/lib/getCustomers";
 import { useQuery } from "react-query";
+
+import { getCustomers } from "@/lib/getCustomers";
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import CreateCustomer from "@/components/create-customer";
 
 const Customers = () => {
   const { data: customers, error, refetch } = useQuery("customersData", getCustomers);

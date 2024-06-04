@@ -1,6 +1,7 @@
+import AppRoutes from "@/routes";
+import Sidebar from "@/components/sidebar";
+
 import { BrowserRouter } from "react-router-dom";
-import Sidebar from "./components/sidebar";
-import AppRoutes from "./routes";
 
 function App() {
   return (
