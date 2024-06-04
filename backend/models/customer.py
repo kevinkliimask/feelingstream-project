@@ -1,11 +1,9 @@
 from dataclasses import dataclass
-from sqlalchemy import UUID, inspect
+from sqlalchemy import UUID, DateTime, inspect
 import uuid
-from sqlalchemy.orm import Mapped
 
 
 from extensions import db
-from models.interaction import Interaction
 
 
 @dataclass
@@ -15,6 +13,7 @@ class Customer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     uuid: str = db.Column(UUID(as_uuid=True), unique=True, default=uuid.uuid4, nullable=False)
     name: str = db.Column(db.String(), nullable=False)
+    created_at: DateTime = db.Column(db.DateTime, server_default=db.func.now(), nullable=False)
 
     interactions = db.relationship("Interaction", backref="customer")
 
