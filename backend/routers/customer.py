@@ -33,7 +33,7 @@ def create_customer():
 @customer_routes.get("/v1/customers")
 def get_customers():
     customers = Customer.query \
-        .filter(Interaction.deleted_at.is_(None)).all()
+        .filter(Customer.deleted_at.is_(None)).all()
     
     result = []
     for customer in customers:

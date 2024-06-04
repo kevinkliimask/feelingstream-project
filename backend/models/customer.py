@@ -14,6 +14,7 @@ class Customer(db.Model):
     uuid: str = db.Column(UUID(as_uuid=True), unique=True, default=uuid.uuid4, nullable=False)
     name: str = db.Column(db.String(), nullable=False)
     created_at: DateTime = db.Column(db.DateTime, server_default=db.func.now(), nullable=False)
+    deleted_at: DateTime = db.Column(db.DateTime)
 
     interactions = db.relationship("Interaction", backref="customer")
 
