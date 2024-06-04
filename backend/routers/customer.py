@@ -18,7 +18,6 @@ class CreateCustomerSchema(Schema):
 def create_customer():
     request_data = request.json
     schema = CreateCustomerSchema()
-    
     try:
         data = schema.load(request_data)
     except ValidationError as err:
@@ -39,16 +38,17 @@ def get_customers():
     result = []
     for customer in customers:
         result.append({**customer.to_dict(exclude=["id"]), "interactions": \
-                       [interaction.to_dict(exclude=["id", "deleted_at", "customer_uuid"]) for interaction in customer.interactions]})
+                       [interaction.to_dict(exclude=["id", "deleted_at", "customer_uuid"]) \
+                        for interaction in customer.interactions if interaction.deleted_at is None]})
 
     return jsonify({"data": result})
 
 @customer_routes.get("/v1/customers/<uuid>")
 def get_customer(uuid: str):
     customer = Customer.query.filter_by(uuid=uuid).first()
-
     if not customer:
         return Response("Customer not found", status=404)
     
     return jsonify({ "data": {**customer.to_dict(exclude=["id"]), "interactions": \
-                              [interaction.to_dict(exclude=["id", "deleted_at", "customer_uuid"]) for interaction in customer.interactions]}})
+                              [interaction.to_dict(exclude=["id", "deleted_at", "customer_uuid"]) \
+                               for interaction in customer.interactions]}})

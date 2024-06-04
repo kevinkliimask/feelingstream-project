@@ -1,9 +1,20 @@
+import { MoreHorizontal } from "lucide-react";
 import { useQuery } from "react-query";
 import axios from "axios";
 
+import { Button } from "@/components/ui/button";
 import { Interaction } from "@/interfaces/interaction";
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import CreateInteraction from "@/components/add-interaction";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import DeleteInteraction from "@/components/delete-interaction";
+import EditInteraction from "@/components/edit-interaction";
 
 const getInteractions = async () => {
   const response = await axios.get(import.meta.env.VITE_BACKEND_URL + "interactions");
@@ -27,6 +38,7 @@ const Interactions = () => {
             <TableHead>Customer Name</TableHead>
             <TableHead>Description</TableHead>
             <TableHead className="text-right">Created At</TableHead>
+            <TableHead className="w-[1px]" />
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -37,6 +49,33 @@ const Interactions = () => {
                 <TableCell>{interaction.customer?.name}</TableCell>
                 <TableCell>{interaction.description}</TableCell>
                 <TableCell className="text-right">{interaction.created_at}</TableCell>
+                <TableCell>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className="h-8 w-8 p-0">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                      <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                        <EditInteraction
+                          uuid={interaction.uuid}
+                          defaultValues={{ title: interaction.title, description: interaction.description }}
+                          onSuccess={refetch}
+                        />
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                        <DeleteInteraction
+                          uuid={interaction.uuid}
+                          title={interaction.title}
+                          customerName={interaction.customer!.name}
+                          onSuccess={refetch}
+                        />
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
               </TableRow>
             ))}
         </TableBody>

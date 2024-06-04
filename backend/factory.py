@@ -15,7 +15,7 @@ def createApp():
 
   app = Flask(__name__)
   app.config.from_pyfile("config.py")
-  CORS(app, origins=FRONTEND_URL)
+  CORS(app, origins=FRONTEND_URL, methods=["GET", "POST", "PUT", "DELETE"])
 
   db.init_app(app)
   migrate.init_app(app, db)
