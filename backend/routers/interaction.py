@@ -1,4 +1,4 @@
-from flask import Blueprint, Response, json, jsonify, request
+from flask import Blueprint, Response, jsonify, request
 from marshmallow import Schema, ValidationError, fields
 
 
@@ -39,6 +39,6 @@ def get_interactions():
     
     result = []
     for interaction in interactions:
-        result.append({**interaction.to_dict(), "customer": interaction.customer})
+        result.append({**interaction.to_dict(), "customer": interaction.customer.to_dict(exclude=["id"])})
 
     return jsonify({"data": result})

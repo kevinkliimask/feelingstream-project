@@ -18,8 +18,10 @@ class Customer(db.Model):
 
     interactions = db.relationship("Interaction", backref="customer")
 
-    def to_dict(self):
-        return {c.key: getattr(self, c.key) for c in inspect(self).mapper.column_attrs}
+    def to_dict(self, exclude=None):
+        if exclude is None:
+            exclude = []
+        return {c.key: getattr(self, c.key) for c in inspect(self).mapper.column_attrs if c.key not in exclude}
 
     def __repr__(self):
         return f'<Customer {self.name}>'

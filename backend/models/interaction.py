@@ -18,8 +18,10 @@ class Interaction(db.Model):
     created_at: DateTime = db.Column(db.DateTime, server_default=db.func.now(), nullable=False)
     deleted_at: DateTime = db.Column(db.DateTime)
 
-    def to_dict(self):
-        return {c.key: getattr(self, c.key) for c in inspect(self).mapper.column_attrs}
+    def to_dict(self, exclude=None):
+        if exclude is None:
+            exclude = []
+        return {c.key: getattr(self, c.key) for c in inspect(self).mapper.column_attrs if c.key not in exclude}
 
     def __repr__(self):
         return f'<Interaction {self.id}>'

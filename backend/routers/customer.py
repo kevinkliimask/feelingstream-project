@@ -1,4 +1,4 @@
-from flask import Blueprint, Response, json, jsonify, request
+from flask import Blueprint, Response, jsonify, request
 from marshmallow import Schema, ValidationError, fields
 
 
@@ -38,7 +38,8 @@ def get_customers():
     
     result = []
     for customer in customers:
-        result.append({**customer.to_dict(), "interactions": customer.interactions})
+        result.append({**customer.to_dict(exclude=["id"]), "interactions": \
+                       [interaction.to_dict(exclude=["id", "deleted_at", "customer_uuid"]) for interaction in customer.interactions]})
 
     return jsonify({"data": result})
 
@@ -49,4 +50,5 @@ def get_customer(uuid: str):
     if not customer:
         return Response("Customer not found", status=404)
     
-    return jsonify({"name": customer.name, "interactions": customer.interactions})
+    return jsonify({ "data": {**customer.to_dict(exclude=["id"]), "interactions": \
+                              [interaction.to_dict(exclude=["id", "deleted_at", "customer_uuid"]) for interaction in customer.interactions]}})
