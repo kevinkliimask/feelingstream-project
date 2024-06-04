@@ -1,18 +1,24 @@
-import * as React from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { useEffect, useState } from "react";
 
 interface ComboboxProps {
   options?: { value: string; label: string }[];
+  fieldValue: string;
+  setFieldValue: (value: string) => void;
 }
 
-const Combobox = ({ options }: ComboboxProps) => {
-  const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
+const Combobox = ({ options, fieldValue, setFieldValue }: ComboboxProps) => {
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(fieldValue);
+
+  useEffect(() => {
+    setFieldValue(value);
+  }, [setFieldValue, value]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

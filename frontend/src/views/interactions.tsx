@@ -11,13 +11,13 @@ const getInteractions = async () => {
 };
 
 const Interactions = () => {
-  const { data: interactions, error } = useQuery("interactionsData", getInteractions);
+  const { data: interactions, error, refetch } = useQuery("interactionsData", getInteractions);
 
   return (
     <>
       <div className="flex justify-between mb-8">
         <h1 className="text-xl font-bold">Interactions</h1>
-        <CreateInteraction  />
+        <CreateInteraction onSuccess={refetch} />
       </div>
       <Table>
         <TableCaption>{error ? "Error: Failed to fetch data." : "A list of all customer interactions."}</TableCaption>

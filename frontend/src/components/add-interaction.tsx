@@ -10,18 +10,55 @@ import {
 } from "@/components/ui/dialog";
 import { getCustomers } from "@/lib/getCustomers";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useQuery } from "react-query";
 import Combobox from "@/components/combobox";
+import { z } from "zod";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import axios from "axios";
 
-const AddInteraction = () => {
-  const { data: customers, error } = useQuery("customersData", getCustomers);
+const FormSchema = z.object({
+  customer_uuid_name: z.string().min(1, { message: "Please select a customer" }),
+  title: z.string().min(1, { message: "Please enter a title" }),
+  description: z.string().min(1, { message: "Please enter a description" }),
+});
+
+interface AddInteractionProps {
+  onSuccess: () => void;
+}
+
+const AddInteraction = ({ onSuccess }: AddInteractionProps ) => {
+  const [open, setOpen] = useState(false);
+  const { data: customers } = useQuery("customersData", getCustomers);
+
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      customer_uuid_name: "",
+      title: "",
+      description: "",
+    },
+  });
+
+  const onSubmit = async (values: z.infer<typeof FormSchema>) => {
+    const { customer_uuid_name, ...rest } = values;
+    await axios.post(import.meta.env.VITE_BACKEND_URL + "interactions", {
+      ...rest,
+      customer_uuid: customer_uuid_name.split(" ")[0],
+    });
+    setOpen(false);
+    onSuccess();
+  };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="font-bold">Add Interaction</Button>
+        <Button onClick={() => setOpen(true)} className="font-bold">
+          Add Interaction
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -30,30 +67,61 @@ const AddInteraction = () => {
             Select a customer and enter details of the interaction. Click "Add" when you're done.
           </DialogDescription>
         </DialogHeader>
-        <div className="flex flex-col gap-4 py-4">
-          <div>
-            <Label htmlFor="customer">Customer</Label>
-            <div className="mt-1">
-              <Combobox
-                options={customers?.data.map((customer) => ({
-                  label: customer.name,
-                  value: `${customer.uuid} ${customer.name}`,
-                }))}
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <div className="flex flex-col gap-4 py-4">
+              <FormField
+                control={form.control}
+                name="customer_uuid_name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Customer</FormLabel>
+                    <FormControl>
+                      <Combobox
+                        options={customers?.data.map((customer) => ({
+                          label: customer.name,
+                          value: `${customer.uuid} ${customer.name}`,
+                        }))}
+                        fieldValue={field.value}
+                        setFieldValue={field.onChange}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Interaction title</FormLabel>
+                    <FormControl>
+                      <Input className="mt-1" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Interaction description</FormLabel>
+                    <FormControl>
+                      <Textarea className="mt-1" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
             </div>
-          </div>
-          <div>
-            <Label htmlFor="title">Interaction title</Label>
-            <Input id="title" className="mt-1" />
-          </div>
-          <div>
-            <Label htmlFor="description">Interaction description</Label>
-            <Textarea id="description" className="mt-1" />
-          </div>
-        </div>
-        <DialogFooter>
-          <Button type="submit">Add</Button>
-        </DialogFooter>
+            <DialogFooter>
+              <Button type="submit">Add</Button>
+            </DialogFooter>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );
