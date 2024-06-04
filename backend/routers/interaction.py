@@ -1,8 +1,9 @@
-from flask import Blueprint, Response, jsonify, request
+from flask import Blueprint, Response, json, jsonify, request
 from marshmallow import Schema, ValidationError, fields
 
 
 from extensions import db
+from models.customer import Customer
 from models.interaction import Interaction
 
 
@@ -31,3 +32,10 @@ def create_interaction():
     db.session.commit()
 
     return Response(status=201)
+
+@interaction_routes.get("/v1/interactions")
+def get_interactions():
+    interactions = Interaction.query.join(Customer).add_columns(Customer.name).filter(Interaction.deleted_at.is_(None)).all()
+    # interactions = db.paginate(db.select(Interaction).join(Customer).add_columns(Customer.name).where(Interaction.deleted_at.is_(None)))
+
+    return jsonify({"data": [tuple(row) for row in interactions]})

@@ -1,7 +1,9 @@
 from dotenv import load_dotenv
 from flask import Flask
+from flask_cors import CORS
 
 
+from config import FRONTEND_URL
 from extensions import db, jwt, migrate
 from routers.auth import auth_routes
 from routers.customer import customer_routes
@@ -13,6 +15,7 @@ def createApp():
 
   app = Flask(__name__)
   app.config.from_pyfile("config.py")
+  CORS(app, origins=FRONTEND_URL)
 
   db.init_app(app)
   migrate.init_app(app, db)

@@ -8,7 +8,9 @@ function App() {
     <div className="ml-48">
       <BrowserRouter>
         <Sidebar />
-        <AppRoutes />
+        <div className="p-4">
+          <AppRoutes />
+        </div>
       </BrowserRouter>
     </div>
   );
