@@ -35,7 +35,10 @@ def create_interaction():
 
 @interaction_routes.get("/v1/interactions")
 def get_interactions():
-    interactions = Interaction.query.join(Customer).add_columns(Customer.name).filter(Interaction.deleted_at.is_(None)).all()
-    # interactions = db.paginate(db.select(Interaction).join(Customer).add_columns(Customer.name).where(Interaction.deleted_at.is_(None)))
+    interactions = Interaction.query.filter(Interaction.deleted_at.is_(None)).all()
+    
+    result = []
+    for interaction in interactions:
+        result.append({**interaction.to_dict(), "customer": interaction.customer})
 
-    return jsonify({"data": [tuple(row) for row in interactions]})
+    return jsonify({"data": result})

@@ -1,7 +1,9 @@
+import { Customer } from "./customer";
+
 export interface Interaction {
-  id: number;
-  customer_uuid: number;
+  uuid: string;
   title: string;
   description: string;
   created_at: string;
+  customer?: Customer;
 }

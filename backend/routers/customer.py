@@ -1,7 +1,8 @@
-from flask import Blueprint, Response, jsonify, request
+from flask import Blueprint, Response, json, jsonify, request
 from marshmallow import Schema, ValidationError, fields
 
 
+from models.interaction import Interaction
 from extensions import db
 from models.customer import Customer
 
@@ -29,6 +30,17 @@ def create_customer():
     db.session.commit()
 
     return Response(status=201)
+
+@customer_routes.get("/v1/customers")
+def get_customers():
+    customers = Customer.query \
+        .filter(Interaction.deleted_at.is_(None)).all()
+    
+    result = []
+    for customer in customers:
+        result.append({**customer.to_dict(), "interactions": customer.interactions})
+
+    return jsonify({"data": result})
 
 @customer_routes.get("/v1/customers/<uuid>")
 def get_customer(uuid: str):

@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from sqlalchemy import UUID
+from sqlalchemy import UUID, inspect
 import uuid
 from sqlalchemy.orm import Mapped
 
@@ -17,6 +17,9 @@ class Customer(db.Model):
     name: str = db.Column(db.String(), nullable=False)
 
     interactions = db.relationship("Interaction", backref="customer")
+
+    def to_dict(self):
+        return {c.key: getattr(self, c.key) for c in inspect(self).mapper.column_attrs}
 
     def __repr__(self):
         return f'<Customer {self.name}>'

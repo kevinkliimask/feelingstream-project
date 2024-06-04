@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from sqlalchemy import UUID, DateTime, ForeignKey
+from sqlalchemy import UUID, DateTime, ForeignKey, inspect
 import uuid
 
 
@@ -17,6 +17,9 @@ class Interaction(db.Model):
     description: str = db.Column(db.String())
     created_at: DateTime = db.Column(db.DateTime, server_default=db.func.now(), nullable=False)
     deleted_at: DateTime = db.Column(db.DateTime)
+
+    def to_dict(self):
+        return {c.key: getattr(self, c.key) for c in inspect(self).mapper.column_attrs}
 
     def __repr__(self):
         return f'<Interaction {self.id}>'
